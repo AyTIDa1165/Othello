@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="810.0" prefWidth="1440.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.othello.BoardController">
+    <children>
+      <ImageView fitHeight="810.0" fitWidth="1440.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@assets/background.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="640.0" fitWidth="640.0" layoutX="103.0" layoutY="95.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@assets/grid.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="720.0" fitWidth="720.0" layoutX="62.0" layoutY="53.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@assets/frame.png" />
+         </image>
+      </ImageView>
+      <GridPane fx:id="hoverPane" layoutX="103.0" layoutY="95.0" prefHeight="640.0" prefWidth="640.0">
+         <columnConstraints>
+            <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="0.0" percentWidth="0.0" prefWidth="80.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="0.0" percentWidth="0.0" prefWidth="80.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="0.0" percentWidth="0.0" prefWidth="80.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="0.0" percentWidth="0.0" prefWidth="80.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="0.0" percentWidth="0.0" prefWidth="80.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="0.0" percentWidth="0.0" prefWidth="80.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="0.0" percentWidth="0.0" prefWidth="80.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="0.0" percentWidth="0.0" prefWidth="80.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" percentHeight="0.0" prefHeight="80.0" valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" percentHeight="0.0" prefHeight="80.0" valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" percentHeight="0.0" prefHeight="80.0" valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" percentHeight="0.0" prefHeight="80.0" valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" percentHeight="0.0" prefHeight="80.0" valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" percentHeight="0.0" prefHeight="80.0" valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" percentHeight="0.0" prefHeight="80.0" valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" percentHeight="0.0" prefHeight="80.0" valignment="CENTER" vgrow="NEVER" />
+         </rowConstraints>
+      </GridPane>
+        <GridPane fx:id="gridPane" layoutX="103.0" layoutY="95.0" prefHeight="640.0" prefWidth="640.0">
+            <columnConstraints>
+                <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="0.0" percentWidth="0.0" prefWidth="80.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="0.0" percentWidth="0.0" prefWidth="80.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="0.0" percentWidth="0.0" prefWidth="80.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="0.0" percentWidth="0.0" prefWidth="80.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="0.0" percentWidth="0.0" prefWidth="80.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="0.0" percentWidth="0.0" prefWidth="80.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="0.0" percentWidth="0.0" prefWidth="80.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="0.0" percentWidth="0.0" prefWidth="80.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" percentHeight="0.0" prefHeight="80.0" valignment="CENTER" vgrow="NEVER" />
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" percentHeight="0.0" prefHeight="80.0" valignment="CENTER" vgrow="NEVER" />
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" percentHeight="0.0" prefHeight="80.0" valignment="CENTER" vgrow="NEVER" />
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" percentHeight="0.0" prefHeight="80.0" valignment="CENTER" vgrow="NEVER" />
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" percentHeight="0.0" prefHeight="80.0" valignment="CENTER" vgrow="NEVER" />
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" percentHeight="0.0" prefHeight="80.0" valignment="CENTER" vgrow="NEVER" />
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" percentHeight="0.0" prefHeight="80.0" valignment="CENTER" vgrow="NEVER" />
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" percentHeight="0.0" prefHeight="80.0" valignment="CENTER" vgrow="NEVER" />
+            </rowConstraints>
+        </GridPane>
+      <ImageView fitHeight="155.0" fitWidth="520.0" layoutX="907.0" layoutY="53.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@assets/tray3.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="155.0" fitWidth="520.0" layoutX="907.0" layoutY="618.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@assets/tray3.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="whiteRestingPiece1" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" x="1350.0" y="80.0">
+         <image>
+            <Image url="@assets/whitePiece.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="whiteRestingPiece2" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" x="1350.0" y="131.0">
+         <image>
+            <Image url="@assets/whitePiece.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="blackRestingPiece1" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" x="1350.0" y="642.0">
+         <image>
+            <Image url="@assets/blackPiece.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="blackRestingPiece2" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" x="1350.0" y="693.0">
+         <image>
+            <Image url="@assets/blackPiece.png" />
+         </image>
+      </ImageView>
+    </children>
+</AnchorPane>
