@@ -14,7 +14,6 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.concurrent.CountDownLatch;
 
 public class BoardController implements Constants{
 
@@ -52,7 +51,7 @@ public class BoardController implements Constants{
         layPieces(WHITE, whiteRestingPiece2);
         layPieces(BLACK, blackRestingPiece1);
         layPieces(BLACK, blackRestingPiece2);
-        updateBoard();
+        setupBoard();
     }
 
     public void createButtons(){
@@ -63,33 +62,35 @@ public class BoardController implements Constants{
                 button.setPrefHeight(80.0);
                 button.setText("0");
                 button.setOpacity(0);
-                button.setOnAction(this::handleButtonClick); // Set the action handler
-
-                if((row == 3 && col == 3) || (row == 4 && col == 4)){
-                    button.setText("1");
-                    button.setDisable(true);
-                }
-
-                else if((row == 3 && col == 4) || (row == 4 && col == 3)){
-                    button.setText("2");
-                    button.setDisable(true);
-                }
-
-                ImageView imageViewHovered = new ImageView();
-                imageViewHovered.setImage(new Image(Objects.requireNonNull(getClass().getResource("assets/hovered.png")).toExternalForm()));
-                hoverPane.add(imageViewHovered, row, col);
-                imageViewHovered.setOpacity(0);
-                button.setOnMouseEntered(event -> {
-                    imageViewHovered.setOpacity(1);
-                });
-
-                button.setOnMouseExited(event -> {
-                    imageViewHovered.setOpacity(0);
-                });
-
-                gridPane.add(button, row, col);
+                button.setOnAction(this::handleButtonClick);
+                highlightSquare(button, row, col);
             }
         }
+    }
+
+    public void highlightSquare(Button button, int rowIndex, int colIndex){
+        ImageView imageViewHovered = new ImageView();
+        imageViewHovered.setImage(new Image(Objects.requireNonNull(getClass().getResource("assets/hover.png")).toExternalForm()));
+        imageViewHovered.setFitWidth(50);
+        imageViewHovered.setFitHeight(50);
+        hoverPane.add(imageViewHovered, rowIndex, colIndex);
+        imageViewHovered.setOpacity(0);
+        button.setOnMouseEntered(event -> {
+//            if(rules.checkValidity(turn, rowIndex, colIndex)){
+                imageViewHovered.setOpacity(1);
+//            }
+//
+//            else{
+//                rules.printMatrix();
+//                System.out.println("\n\n");
+//            }
+        });
+
+        button.setOnMouseExited(event -> {
+            imageViewHovered.setOpacity(0);
+        });
+
+        gridPane.add(button, rowIndex, colIndex);
     }
 
     public void createImageViews(){
@@ -111,7 +112,8 @@ public class BoardController implements Constants{
             blackPieces.add(originalRestingPiece);
         }
 
-        int shift = 28;
+        int shiftValue = 28;
+        int shift = shiftValue;
         ImageView restingPiece;
         for(int i = 0; i<15; i++){
             restingPiece = new ImageView();
@@ -120,7 +122,7 @@ public class BoardController implements Constants{
             restingPiece.setFitHeight((originalRestingPiece.getFitHeight()));
             restingPiece.setX((originalRestingPiece.getX()-shift));
             restingPiece.setY((originalRestingPiece.getY()));
-            shift+=28;
+            shift+=shiftValue;
             restingPiece.setImage(originalRestingPiece.getImage());
 
             if(color == WHITE){
@@ -132,17 +134,45 @@ public class BoardController implements Constants{
         }
     }
 
+    public void setupBoard(){
+        Image image;
+
+        image = new Image(Objects.requireNonNull(getClass().getResource("assets/whitePiece.png")).toExternalForm());
+        Objects.requireNonNull(getTargetImageView(3, 3)).setImage(image);
+        Objects.requireNonNull(getTargetImageView(4, 4)).setImage(image);
+
+        image = new Image(Objects.requireNonNull(getClass().getResource("assets/blackPiece.png")).toExternalForm());
+        Objects.requireNonNull(getTargetImageView(3, 4)).setImage(image);
+        Objects.requireNonNull(getTargetImageView(4, 3)).setImage(image);
+
+        Objects.requireNonNull(getTargetButton(3, 3)).setText("1");
+        Objects.requireNonNull(getTargetButton(4, 4)).setText("1");
+        Objects.requireNonNull(getTargetButton(3, 4)).setText("2");
+        Objects.requireNonNull(getTargetButton(4, 3)).setText("2");
+
+        Objects.requireNonNull(getTargetButton(3, 3)).setDisable(true);
+        Objects.requireNonNull(getTargetButton(4, 4)).setDisable(true);
+        Objects.requireNonNull(getTargetButton(3, 4)).setDisable(true);
+        Objects.requireNonNull(getTargetButton(4, 3)).setDisable(true);
+
+        rules.printMatrix();
+    }
+
     private void handleButtonClick(ActionEvent event) {
         Button clickedButton = (Button) event.getSource();
         int rowIndex = GridPane.getRowIndex(clickedButton);
         int colIndex = GridPane.getColumnIndex(clickedButton);
 
+        System.out.println("\nROW: " + rowIndex + "   " + "COL: " + colIndex);
 
-        System.out.println("\nrow: " + rowIndex + "   " + "col: " + colIndex);
-
-        if(rules.updateMatrixAfterMove(turn, rowIndex, colIndex)){
+        if(rules.checkValidity(turn, rowIndex, colIndex)){
+            rules.updateMatrixAfterMove(turn, rowIndex, colIndex);
             clickedButton.setDisable(true);
-            updateBoard();
+            movePiece(rowIndex, colIndex);
+        }
+
+        else{
+            System.out.println("INVALID MOVE");
         }
     }
 
@@ -168,7 +198,6 @@ public class BoardController implements Constants{
         return null;
     }
 
-
     public void putPiece(boolean turn, int rowIndex, int colIndex){
         Image targetImage;
         if(turn == BLACK){
@@ -182,49 +211,69 @@ public class BoardController implements Constants{
         }
     }
 
-    public void updateBoard(){
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < columns; j++) {
-                if(rules.getMatrix()[i][j] == 1){
-                    if(Objects.requireNonNull(getTargetButton(i, j)).getText().equals("2")){
-                        flipToAnimation(WHITE, i , j);
-                    }
+    public void movePiece(int rowIndex, int colIndex){
+        if(turn == WHITE){
+            Objects.requireNonNull(getTargetButton(rowIndex, colIndex)).setText("1");
+        }
 
-                    else if(Objects.requireNonNull(getTargetButton(i, j)).getText().equals("0")){
-                        moveAnimation(WHITE, i, j);
-                    }
+        else{
+            Objects.requireNonNull(getTargetButton(rowIndex, colIndex)).setText("2");
+        }
 
-                    else{
-                        //start animation
-                        putPiece(WHITE, i, j);
-                    }
+        moveAnimation(turn, rowIndex, colIndex);
+    }
 
-                    Objects.requireNonNull(getTargetButton(i, j)).setText("1");
+    public void moveAnimation(boolean color, int rowIndex, int colIndex){
+        ImageView restingImageView = color == WHITE ? whitePieces.getLast() : blackPieces.getLast();
+        ImageView targetImageView = getTargetImageView(rowIndex, colIndex);
+        assert targetImageView != null;
+        double destinationX = targetImageView.getLayoutX();
+        double destinationY = targetImageView.getLayoutY();
+
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), restingImageView);
+        transition.setToX(destinationX - restingImageView.getX() + 105); //why these offsets?
+        transition.setToY(destinationY - restingImageView.getY() + 95);
+
+        transition.setOnFinished(event -> {
+
+            if(color == WHITE){
+                whitePieces.removeLast();
+            }
+
+            else{
+                blackPieces.removeLast();
+            }
+
+            putPiece(color, rowIndex, colIndex);
+            restingImageView.setOpacity(0);
+
+            rules.updateMatrixAfterFlip(rowIndex, colIndex);
+            flipPieces();
+            checkException();
+        });
+
+        transition.play();
+    }
+
+    public void flipPieces(){
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                if(rules.getMatrix()[row][col] == 1 && Objects.requireNonNull(getTargetButton(row, col)).getText().equals("2")){
+                    flipToAnimation(WHITE, row , col);
+                    Objects.requireNonNull(getTargetButton(row, col)).setText("1");
                 }
 
-                else if (rules.getMatrix()[i][j] == 2){
-                    if(Objects.requireNonNull(getTargetButton(i, j)).getText().equals("1")){
-                        flipToAnimation(BLACK, i , j);
-                    }
-
-                    else if(Objects.requireNonNull(getTargetButton(i, j)).getText().equals("0")){
-                        moveAnimation(BLACK, i, j);
-
-                    }
-
-                    else{
-                        //start animation
-                        putPiece(BLACK, i, j);
-                    }
-                    Objects.requireNonNull(getTargetButton(i, j)).setText("2");
+                else if (rules.getMatrix()[row][col] == 2 && Objects.requireNonNull(getTargetButton(row, col)).getText().equals("1")){
+                    flipToAnimation(BLACK, row , col);
+                    Objects.requireNonNull(getTargetButton(row, col)).setText("2");
                 }
             }
         }
     }
 
     public void flipToAnimation(boolean color, int rowIndex, int colIndex) {
-        int startFrame = color == BLACK ? 0 : 10; // Start frame based on the option
-        int step = color == BLACK? 1 : -1;       // Step based on the option
+        int startFrame = color == BLACK ? 0 : 10;
+        int step = color == BLACK? 1 : -1;
 
         int[] i = {startFrame};
 
@@ -243,85 +292,19 @@ public class BoardController implements Constants{
         timeline1.play();
     }
 
-    public void moveAnimation(boolean color, int rowIndex, int colIndex){
-        ImageView restingImageView = color == WHITE ? whitePieces.getLast() : blackPieces.getLast();
-        ImageView targetImageView = getTargetImageView(rowIndex, colIndex);
-        assert targetImageView != null;
-        double destinationX = targetImageView.getLayoutX();
-        double destinationY = targetImageView.getLayoutY();
-
-        // Create TranslateTransition
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), restingImageView);
-        transition.setToX(destinationX - restingImageView.getX() + 80 + 25);
-        transition.setToY(destinationY - restingImageView.getY() + 80 + 15);
-
-        transition.setOnFinished(event -> {
-
-            if(color == WHITE){
-                whitePieces.removeLast();
-                putPiece(WHITE, rowIndex, colIndex);
+    public void checkException(){
+        if(rules.checkWinner() == 0){
+            if(rules.checkPassMove(turn) && rules.checkPassMove(!turn)){
+                rules.declareDraw();
             }
-
+            else if(!rules.checkPassMove(!turn)){
+                turn = !turn;
+            }
             else{
-                blackPieces.removeLast();
-                putPiece(BLACK, rowIndex, colIndex);
-            }
-            restingImageView.setOpacity(0);
-            rules.updateMatrixAfterFlip(rowIndex, colIndex);
-            updateBoard();
-            if(!checkWinner(false)){
-                if(checkPassMove(turn) && checkPassMove(!turn)){
-                    checkWinner(true);
-                }
-                else if(!checkPassMove(!turn)){
-                    turn = !turn;
-                }
-                else{
-                    System.out.println("move passed");
-                }
-            };
-        });
-
-        transition.play();
-    }
-
-    public boolean checkWinner(boolean key){
-        if(key){
-            System.out.println("IT IS A DRAW (key)");
-            return true;
-        }
-
-        else if(rules.getNumPieces()[0] == 0){
-            if(rules.getNumPieces()[1] > rules.getNumPieces()[2]){
-                System.out.println("WHITE IS WINNER");
-            }
-
-            else if(rules.getNumPieces()[1] < rules.getNumPieces()[2]){
-                System.out.println("BLACK IS WINNER");
-            }
-
-            else{
-                System.out.println("IT IS A DRAW");
-            }
-
-            return true;
-        }
-        return false;
-    }
-
-    public boolean checkPassMove(boolean color){
-        for(int i = 0; i<8; i++){
-            for(int j = 0; j< 8; j++){
-                if(rules.getMatrix()[i][j] == 0 && rules.updateMatrixAfterMove(color, i, j)){
-                    rules.getMatrix()[i][j] = 0;
-                    return false;
-                }
-                else if(rules.getMatrix()[i][j] == 0){
-                    rules.getMatrix()[i][j] = 0;
-                }
+                System.out.println("MOVE PASSED");
             }
         }
-        return true;
+        //code rest cases to declare result on GUI
     }
 
     //GETTERS BELOW:

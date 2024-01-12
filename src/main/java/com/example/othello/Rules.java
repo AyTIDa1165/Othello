@@ -9,15 +9,14 @@ public class Rules implements Constants{
 //    Black is 2
 
     private int[][] matrix = new int[8][8];
-    private int[] numPieces;
+    private int[] numPieces = new int[]{0, 0, 0};
 
     public Rules(){
         createMatrix();
-        numPieces = new int[]{0, 0, 0};
         updateNumPieces();
     }
 
-    private void createMatrix(){
+    public void createMatrix(){
         for (int[] ints : matrix) {
             Arrays.fill(ints, 0);
         }
@@ -26,11 +25,9 @@ public class Rules implements Constants{
         matrix[4][4] = 1;
         matrix[3][4] = 2;
         matrix[4][3] = 2;
-
-        printMatrix();
     }
 
-    private void printMatrix(){
+    public void printMatrix(){
         for (int[] ints : matrix) {
             for (int anInt : ints) {
                 System.out.print(anInt + " ");
@@ -59,27 +56,12 @@ public class Rules implements Constants{
         return validMove;
     }
 
-    public boolean updateMatrixAfterMove(boolean turn, int rowIndex, int colIndex) {
+    public void updateMatrixAfterMove(boolean turn, int rowIndex, int colIndex) {
         if (turn) {
             matrix[rowIndex][colIndex] = 1;
         } else {
             matrix[rowIndex][colIndex] = 2;
         }
-
-        boolean validMove = false;
-        for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
-                if (!(i == 0 && j == 0) && flip(true, rowIndex, colIndex, i, j)) {
-                    validMove = true;
-                    break;
-                }
-            }
-        }
-        
-        if (!validMove) {
-            matrix[rowIndex][colIndex] = 0;
-        }
-        return validMove;
     }
 
     public void updateMatrixAfterFlip(int rowIndex, int colIndex){
@@ -111,14 +93,14 @@ public class Rules implements Constants{
             flipType = 3;
         }
 
-        boolean flag1 = false;
+        boolean flag = false;
 
         while(0 <= i && i < rows && 0 <= j && j < columns && matrix[i][j] != 0){
             if (matrix[i][j] == currentTurnNumber) {
                 if((flipType == 1 && (initialRowIndex != i)) ||
                         (flipType == 2 && (initialColIndex != j)) ||
                         (flipType == 3 && (initialRowIndex != i) && initialColIndex != j)){
-                    flag1 = (Math.abs(i - initialRowIndex) != 1) && (Math.abs(j - initialColIndex) != 1);
+                    flag = (Math.abs(i - initialRowIndex) != 1) && (Math.abs(j - initialColIndex) != 1);
                     break;
                 }
                 else{
@@ -132,7 +114,7 @@ public class Rules implements Constants{
             }
         }
 
-        if(flag1 && !CHECK){
+        if(flag && !CHECK){
             int k = initialRowIndex;
             int l = initialColIndex;
             for(int x = 0; x < Math.max((Math.abs(initialRowIndex - i) + 1), (Math.abs(initialColIndex - j))); x++){
@@ -141,7 +123,7 @@ public class Rules implements Constants{
                 l+=horizontalIncrement;
             }
         }
-        return flag1;
+        return flag;
     }
 
     public void updateNumPieces(){
@@ -154,7 +136,45 @@ public class Rules implements Constants{
                 numPieces[matrix[i][j]]++;
             }
         }
-        System.out.println(numPieces[0] + " " + numPieces[1] + " " + numPieces[2]);
+    }
+
+    public int checkWinner(){
+        if(numPieces[0] == 0){
+            if(numPieces[1] > numPieces[2]){
+                System.out.println("WHITE IS WINNER");
+                return 1;
+            }
+
+            else if(numPieces[1] < numPieces[2]){
+                System.out.println("BLACK IS WINNER");
+                return 2;
+            }
+
+            else{
+                System.out.println("IT IS A DRAW");
+                return 3;
+            }
+        }
+        return 0;
+    }
+
+    public void declareDraw(){
+        System.out.println("IT IS A DRAW (key)");
+    }
+
+    public boolean checkPassMove(boolean color){
+        for(int i = 0; i<8; i++){
+            for(int j = 0; j< 8; j++){
+                if(matrix[i][j] == 0 && checkValidity(color, i, j)){
+                    matrix[i][j] = 0;
+                    return false;
+                }
+                else if(matrix[i][j] == 0){
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+        return true;
     }
 
     //GETTERS BELOW:
